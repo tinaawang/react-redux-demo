@@ -1,26 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <div>
+        你点击了 <span id="value">{this.props.n}</span> 次
+        <div>
+          <button
+            id="add1"
+            onClick={() => {
+              this.props.add1();
+            }}
+          >
+            +1
+          </button>
+          <button
+            id="add2"
+            onClick={() => {
+              this.props.add2();
+            }}
+          >
+            +2
+          </button>
+          <button
+            id="add1IfOdd"
+            onClick={() => {
+              if (this.props.n % 2 === 1) {
+                this.props.add3();
+              }
+            }}
+          >
+            如果是单数就+1
+          </button>
+          <button
+            id="add1After2Sec"
+            onClick={() => {
+              this.props.add4();
+            }}
+          >
+            两秒钟后+1
+          </button>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return { n: state.n };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    add1: () => dispatch({ type: "add", payload: 1 }),
+    add2: () => dispatch({ type: "add", payload: 2 }),
+    add3: () => {
+      dispatch({ type: "add", payload: 1 });
+    },
+    add4: () => {
+      setTimeout(() => {
+        dispatch({ type: "add", payload: 1 });
+      }, 2000);
+    }
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
